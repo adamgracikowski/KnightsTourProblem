@@ -148,3 +148,90 @@ bool backtracing(Position p, int moveNumber, Board *board, Knight *knight)
     }
     return false;
 }
+
+Position generatePosition(const int rows, const int columns)
+{
+    return (Position){rand() % rows, rand() % columns};
+}
+
+bool solveUsingWarnsdorffsRule(Position start, const int rows, const int columns)
+{
+    Board board;
+    initBoard(&board, rows, columns);
+    if (!board.fields)
+    {
+        perror("Not enough memory.\n");
+        return false;
+    }
+    Knight knight = {.cMove = {1, 2, 2, 1, -1, -2, -2, -1},
+                     .rMove = {2, 1, -1, -2, -2, -1, 1, 2}};
+    Position p = {start.row, start.column};
+    board.fields[p.row][p.column].whenVisited = 0;
+
+    int n = board.rows * board.columns;
+    for (int i = 1; i < n; ++i)
+    {
+        if (moveNext(&p, &board, &knight) == false)
+        {
+            printf("Solution not found.\n");
+            freeBoard(&board);
+            return false;
+        }
+    }
+    printBoard(&board);
+    if (isNeighbour(p, start, &knight))
+        printf("Closed Tour found.\n");
+    else
+        printf("Open Tour found.\n");
+    freeBoard(&board);
+    return true;
+}
+
+bool moveNext(Position *p, Board *board, Knight *knight)
+{
+    int randIdx = rand() % KNIGHT_MOVES;
+    int minAccess = KNIGHT_MOVES + 1, currentAccess, minAccessIdx = -1, rNext, cNext;
+    for (int i = 0; i < KNIGHT_MOVES; ++i)
+    {
+        int j = (i + randIdx) % KNIGHT_MOVES;
+        rNext = p->row + knight->rMove[j];
+        cNext = p->column + knight->cMove[j];
+        Position pNext = {rNext, cNext};
+        if (isAccessible(pNext, board) && (currentAccess = countAccess(pNext, board, knight)) < minAccess)
+        {
+            minAccess = currentAccess;
+            minAccessIdx = j;
+        }
+    }
+    if (minAccessIdx == -1)
+        return false;
+
+    int moveNumber = board->fields[p->row][p->column].whenVisited;
+    p->row = p->row + knight->rMove[minAccessIdx];
+    p->column = p->column + knight->cMove[minAccessIdx];
+    board->fields[p->row][p->column].whenVisited = moveNumber + 1;
+    return true;
+}
+
+int countAccess(const Position p, Board *board, Knight *knight)
+{
+    int counter = 0;
+    for (int i = 0; i < KNIGHT_MOVES; ++i)
+    {
+        if (isAccessible((Position){p.row + knight->rMove[i], p.column + knight->cMove[i]}, board))
+        {
+            counter++;
+        }
+    }
+    return counter;
+}
+
+bool isNeighbour(const Position p1, const Position p2, Knight *knight)
+{
+    for (int i = 0; i < KNIGHT_MOVES; ++i)
+    {
+        if (p1.row + knight->rMove[i] == p2.row && p1.column + knight->cMove[i] == p2.column)
+            return true;
+    }
+    return false;
+}

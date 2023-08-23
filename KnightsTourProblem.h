@@ -50,4 +50,10 @@ bool isAccessible(const Position position, const Board *board);
 bool solveKnightsTourProblem(const int r, const int c);
 bool backtracing(Position p, int m, Board *board, Knight *knight);
 
+bool solveUsingWarnsdorffsRule(Position start, const int rows, const int columns);
+bool moveNext(Position *p, Board *board, Knight *knight);
+int countAccess(const Position p, Board *board, Knight *knight);
+bool isNeighbour(const Position p1, const Position p2, Knight *knight);
+Position generatePosition(const int rows, const int columns);
+
 #endif // KNIGHTSTOURPROBLEM_H
