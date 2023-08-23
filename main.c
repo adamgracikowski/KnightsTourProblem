@@ -3,7 +3,7 @@
 int main(void)
 {
 #if 0  // default Puzzle solution using backtracking
-        solveKnightsTourProblem(HEIGHT, WIDTH);
+        solveKnightsTourProblem(STD_COLUMNS, STD_ROWS);
 #endif // default Puzzle solution using backtracking
 
 #if 1 // interactive
