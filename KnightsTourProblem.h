@@ -12,6 +12,8 @@
 #define STD_ROWS 8
 #define STD_COLUMNS 8
 
+//--------------------------------------
+
 typedef struct Field
 {
     int whenVisited;
@@ -35,5 +37,13 @@ typedef struct Position
     int row;
     int column;
 } Position;
+
+//--------------------------------------
+
+bool initBoard(Board *board, const int rows, const int columns);
+void freeBoard(Board *board);
+void resetBoard(Board *board);
+void printBoard(Board *board);
+int calculateFieldWidth(Board *board);
 
 #endif // KNIGHTSTOURPROBLEM_H
