@@ -171,6 +171,7 @@ bool solveUsingWarnsdorffsRule(Position start, const int rows, const int columns
     int n = board.rows * board.columns;
     for (int i = 1; i < n; ++i)
     {
+		ANIMATION(printBoard(&board), ANIMATION_DELAY);
         if (moveNext(&p, &board, &knight) == false)
         {
             printf("Solution not found.\n");
@@ -178,6 +179,7 @@ bool solveUsingWarnsdorffsRule(Position start, const int rows, const int columns
             return false;
         }
     }
+	ANIMATION(, ANIMATION_DELAY);
     printBoard(&board);
     if (isNeighbour(p, start, &knight))
         printf("Closed Tour found.\n");

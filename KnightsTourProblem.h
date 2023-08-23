@@ -14,6 +14,20 @@
 
 //--------------------------------------
 
+#define INTERACTIVE_PRINT 1
+// #define INTERACTIVE_PRINT 0 // uncomment this line and comment the line above to disable the animation
+#define ANIMATION_DELAY 500
+#define ANIMATION(instruction, delay) \
+    if (INTERACTIVE_PRINT)            \
+    {                                 \
+        Sleep(delay);                 \
+        if (system("cls"))            \
+            system("clear");          \
+        instruction;                  \
+    }
+
+//--------------------------------------
+
 typedef struct Field
 {
     int whenVisited;
