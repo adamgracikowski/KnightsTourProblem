@@ -45,5 +45,9 @@ void freeBoard(Board *board);
 void resetBoard(Board *board);
 void printBoard(Board *board);
 int calculateFieldWidth(Board *board);
+bool isWithinBoard(const Position position, const Board *board);
+bool isAccessible(const Position position, const Board *board);
+bool solveKnightsTourProblem(const int r, const int c);
+bool backtracing(Position p, int m, Board *board, Knight *knight);
 
 #endif // KNIGHTSTOURPROBLEM_H

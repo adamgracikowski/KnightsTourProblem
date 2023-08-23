@@ -88,3 +88,63 @@ int calculateFieldWidth(Board *board)
     } while (greatestNumber != 0);
     return counter;
 }
+
+bool isWithinBoard(const Position p, const Board *board)
+{
+    return (p.row >= 0 && p.row < board->rows &&
+            p.column >= 0 && p.column < board->columns);
+}
+
+bool isAccessible(const Position p, const Board *board)
+{
+    return (isWithinBoard(p, board) &&
+            board->fields[p.row][p.column].whenVisited == NOT_VISITED);
+}
+
+bool solveKnightsTourProblem(const int r, const int c)
+{
+    Board board;
+    initBoard(&board, r, c);
+    if (!board.fields)
+    {
+        perror("Not enough memory.\n");
+        return false;
+    }
+    Knight knight = {.cMove = {1, 2, 2, 1, -1, -2, -2, -1},
+                     .rMove = {2, 1, -1, -2, -2, -1, 1, 2}};
+    board.fields[0][0].whenVisited = 0;
+    bool result;
+    if ((result = backtracing((Position){0, 0}, 1, &board, &knight)) == false)
+    {
+        printf("Solution not found.");
+    }
+    else
+    {
+        printBoard(&board);
+        printf("Solution found.\n\n");
+    }
+    freeBoard(&board);
+    return result;
+}
+
+bool backtracing(Position p, int moveNumber, Board *board, Knight *knight)
+{
+    if (moveNumber == board->rows * board->columns)
+        return true;
+
+    int rNext, cNext;
+    for (int k = 0; k < KNIGHT_MOVES; ++k)
+    {
+        rNext = p.row + knight->rMove[k];
+        cNext = p.column + knight->cMove[k];
+        if (isAccessible((Position){rNext, cNext}, board))
+        {
+            board->fields[rNext][cNext].whenVisited = moveNumber;
+            if (backtracing((Position){rNext, cNext}, moveNumber + 1, board, knight))
+                return true;
+            else
+                board->fields[rNext][cNext].whenVisited = NOT_VISITED;
+        }
+    }
+    return false;
+}
